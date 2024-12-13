@@ -16,7 +16,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div data-aos="fade-up" data-aos-delay="300">
                             <label class="block text-gray-700 font-medium mb-2">Product</label>
-                            <select v-model="newOrder.product_id" required
+                            <select v-model="newOrder.product_id" required @change="calculateTotalPrice"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 focus:outline-none transition duration-300">
                                 <option value="">Select Product</option>
                                 <option v-for="product in products" :key="product.id" :value="product.id">
@@ -179,7 +179,7 @@ export default {
             });
         },
         calculateTotalPrice() {
-            if (this.newOrder.product_id) {
+            if (this.newOrder.product_id && this.newOrder.quantity) {
                 const selectedProduct = this.products.find(p => p.id == this.newOrder.product_id);
                 if (selectedProduct) {
                     this.newOrder.total_price = selectedProduct.price * this.newOrder.quantity;

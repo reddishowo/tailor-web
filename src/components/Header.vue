@@ -1,56 +1,118 @@
-<!-- Header.vue -->
 <template>
     <header class="bg-white shadow-md sticky top-0 z-50">
-        <nav class="container mx-auto flex justify-between items-center p-5">
-            <!-- Logo Section -->
-            <div class="flex items-center space-x-3">
-                <img src="/assets/logo.png" alt="Tailor Logo" class="w-10 h-10">
-                <h2 class="text-2xl font-semibold text-gray-800">Tailor</h2>
-            </div>
-
-            <!-- Burger Menu Icon for Mobile -->
-            <div class="flex lg:hidden" onclick="toggleMenu()">
-                <i class="fas fa-bars text-xl text-gray-600 cursor-pointer"></i>
-            </div>
-
-            <!-- Menu Items -->
-            <ul id="menu" class="hidden lg:flex space-x-8 text-gray-700 font-medium">
-                <li><router-link to="/" class="hover:text-gray-900">Home</router-link></li>
-                <li><router-link to="/about" class="hover:text-gray-900">About</router-link></li>
-                <li><router-link to="/servicepage" class="hover:text-gray-900">Services</router-link></li>
-                <li><router-link :to="{ name: 'products.index' }" class="hover:text-gray-900">Product</router-link></li>
-                <li><router-link :to="{ name: 'orders.index' }" class="hover:text-gray-900">Order</router-link></li>
-            </ul>
-
-
-            <!-- Contact Button for Large Screens -->
-            <button class="hidden lg:block bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg">
-                Contact Us
-            </button>
-        </nav>
-
-        <!-- Mobile Menu Items (Hidden by Default) -->
-        <div id="mobileMenu" class="lg:hidden hidden bg-white shadow-md">
-            <ul class="text-gray-700 font-medium space-y-2 p-5">
-                <li><router-link to="/" class="hover:text-gray-900">Home</router-link></li>
-                <li><router-link to="/about" class="hover:text-gray-900">About</router-link></li>
-                <li><router-link to="/servicepage" class="hover:text-gray-900">Services</router-link></li>
-                <li><router-link :to="{ name: 'products.index' }" class="hover:text-gray-900">Product</router-link></li>
-                <li><router-link :to="{ name: 'orders.index' }" class="hover:text-gray-900">Order</router-link></li>
-                <li><a href="contact.html"
-                        class="block bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg">Contact Us</a>
-                </li>
-            </ul>
+      <nav class="container mx-auto flex justify-between items-center p-4 md:p-5">
+        <!-- Logo Section -->
+        <div class="flex items-center space-x-3">
+          <img src="/assets/logo.png" alt="Tailor Logo" class="w-8 h-8 md:w-10 md:h-10">
+          <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Tailor</h2>
         </div>
+  
+        <!-- Mobile Menu Toggle -->
+        <div 
+          class="lg:hidden cursor-pointer z-60" 
+          @click="toggleMobileMenu"
+        >
+          <i 
+            :class="[
+              'fas', 
+              isMobileMenuOpen ? 'fa-times text-red-500' : 'fa-bars text-gray-600', 
+              'text-xl transition-colors duration-300'
+            ]"
+          ></i>
+        </div>
+  
+        <!-- Desktop Menu Items -->
+        <ul class="hidden lg:flex space-x-6 xl:space-x-8 text-gray-700 font-medium">
+          <li v-for="(item, index) in menuItems" :key="index">
+            <router-link 
+              :to="item.route" 
+              class="hover:text-gray-900 transition-colors duration-300"
+            >
+              {{ item.name }}
+            </router-link>
+          </li>
+        </ul>
+  
+        <!-- Desktop Contact Button -->
+        <button class="hidden lg:block bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg transition-colors duration-300">
+          Contact Us
+        </button>
+      </nav>
+  
+      <!-- Mobile Menu Overlay -->
+      <div 
+        v-if="isMobileMenuOpen"
+        class="fixed inset-0 bg-black bg-opacity-50 lg:hidden z-40"
+        @click="toggleMobileMenu"
+      ></div>
+  
+      <!-- Mobile Menu Slide-out -->
+      <div 
+        class="fixed top-0 right-0 w-64 h-full bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 lg:hidden"
+        :class="isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'"
+      >
+        <div class="p-6 space-y-4 mt-16">
+          <router-link 
+            v-for="(item, index) in menuItems" 
+            :key="index"
+            :to="item.route" 
+            class="block text-gray-700 hover:text-gray-900 text-lg font-medium py-2 border-b border-gray-200"
+            @click="toggleMobileMenu"
+          >
+            {{ item.name }}
+          </router-link>
+          
+          <a 
+            href="#contact" 
+            class="block text-center bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-lg transition-colors duration-300"
+            @click="toggleMobileMenu"
+          >
+            Contact Us
+          </a>
+        </div>
+      </div>
     </header>
-</template>
-
-<script>
-export default {
+  </template>
+  
+  <script>
+  export default {
     name: 'Header',
-};
-</script>
-
-<style scoped>
-/* Scoped styles */
-</style>
+    data() {
+      return {
+        isMobileMenuOpen: false,
+        menuItems: [
+          { name: 'Home', route: '/' },
+          { name: 'About', route: '/about' },
+          { name: 'Services', route: '/servicepage' },
+          { name: 'Product', route: { name: 'products.index' } },
+          { name: 'Order', route: { name: 'orders.index' } }
+        ]
+      }
+    },
+    methods: {
+      toggleMobileMenu() {
+        this.isMobileMenuOpen = !this.isMobileMenuOpen
+        
+        // Prevent body scroll when mobile menu is open
+        if (this.isMobileMenuOpen) {
+          document.body.style.overflow = 'hidden'
+        } else {
+          document.body.style.overflow = 'auto'
+        }
+      }
+    },
+    beforeUnmount() {
+      // Ensure body scroll is restored if component is destroyed with menu open
+      document.body.style.overflow = 'auto'
+    }
+  }
+  </script>
+  
+  <style scoped>
+  @media (max-width: 640px) {
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+  </style>
