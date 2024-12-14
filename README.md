@@ -55,7 +55,7 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Migrasi database jika diperlukan:
+Migrasi database jika diperlukan (Jangan lupa untuk start xampp/laragon mysql):
 ```bash
 php artisan migrate
 ```
