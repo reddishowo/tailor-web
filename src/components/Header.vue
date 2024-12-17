@@ -34,7 +34,9 @@
         </ul>
   
         <!-- Desktop Contact Button -->
-        <button class="hidden lg:block bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg transition-colors duration-300">
+        <button
+        @click="openContactModal" 
+        class="hidden lg:block bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg transition-colors duration-300">
           Contact Us
         </button>
       </nav>
@@ -64,6 +66,7 @@
           
           <a 
             href="#contact" 
+            @click.prevent="openContactModal"
             class="block text-center bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-lg transition-colors duration-300"
             @click="toggleMobileMenu"
           >
@@ -71,48 +74,52 @@
           </a>
         </div>
       </div>
+      <ContactUsModal ref="contactModal" />
     </header>
   </template>
   
   <script>
-  export default {
-    name: 'Header',
-    data() {
-      return {
-        isMobileMenuOpen: false,
-        menuItems: [
-          { name: 'Home', route: '/' },
-          { name: 'About', route: '/about' },
-          { name: 'Services', route: '/servicepage' },
-          { name: 'Product', route: { name: 'products.index' } },
-          { name: 'Order', route: { name: 'orders.index' } }
-        ]
+import ContactUsModal from '@/components/ContactUsModal.vue' // Sesuaikan path impor
+
+export default {
+  name: 'Header',
+  components: {
+    ContactUsModal
+  },
+  data() {
+    return {
+      isMobileMenuOpen: false,
+      menuItems: [
+        { name: 'Home', route: '/' },
+        { name: 'About', route: '/about' },
+        { name: 'Services', route: '/servicepage' },
+        { name: 'Product', route: { name: 'products.index' } },
+        { name: 'Order', route: { name: 'orders.index' } }
+      ]
+    }
+  },
+  methods: {
+    toggleMobileMenu() {
+      this.isMobileMenuOpen = !this.isMobileMenuOpen
+      
+      if (this.isMobileMenuOpen) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = 'auto'
       }
     },
-    methods: {
-      toggleMobileMenu() {
-        this.isMobileMenuOpen = !this.isMobileMenuOpen
-        
-        // Prevent body scroll when mobile menu is open
-        if (this.isMobileMenuOpen) {
-          document.body.style.overflow = 'hidden'
-        } else {
-          document.body.style.overflow = 'auto'
-        }
+    openContactModal() {
+      // Tutup menu mobile jika terbuka
+      if (this.isMobileMenuOpen) {
+        this.toggleMobileMenu()
       }
-    },
-    beforeUnmount() {
-      // Ensure body scroll is restored if component is destroyed with menu open
-      document.body.style.overflow = 'auto'
+      
+      // Buka modal kontak
+      this.$refs.contactModal.openModal()
     }
+  },
+  beforeUnmount() {
+    document.body.style.overflow = 'auto'
   }
-  </script>
-  
-  <style scoped>
-  @media (max-width: 640px) {
-    .container {
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-  }
-  </style>
+}
+</script>
