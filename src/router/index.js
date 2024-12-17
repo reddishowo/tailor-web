@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import About from '../views/About.vue';
-import Home from '../views/Home.vue';
+import About from '../views/Aboutpage.vue';
+import Home from '../views/HomePage.vue';
 import Services from '../components/Services.vue';
 import ServicePage from '../views/ServicePage.vue';
 
@@ -38,7 +38,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),  // Hapus process.env.BASE_URL jika tidak didefinisikan
+  history: createWebHistory(),  
   routes,
 });
 
