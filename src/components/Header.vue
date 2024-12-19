@@ -93,6 +93,7 @@ export default {
         { name: 'Home', route: '/' },
         { name: 'About', route: '/about' },
         { name: 'Services', route: '/servicepage' },
+        { name: 'Listing', route: '/listing' },
         { name: 'Product', route: { name: 'products.index' } },
         { name: 'Order', route: { name: 'orders.index' } }
       ]
